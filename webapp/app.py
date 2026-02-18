@@ -46,7 +46,51 @@ def convert():
     if not pandoc_path:
         return render_template("index.html", error="pandoc not found on PATH.")
 
-    anystyle_cmd = request.form.get("anystyle_cmd") or "anystyle"
+    # Auto-detect anystyle path if user didn't provide one
+    user_anystyle = request.form.get("anystyle_cmd", "").strip()
+    if user_anystyle:
+        # User provided a custom path, use it
+        anystyle_cmd = user_anystyle
+    else:
+        # Auto-detect: try to find anystyle on PATH
+        anystyle_path = _check_cli("anystyle")
+        if anystyle_path:
+            anystyle_cmd = anystyle_path
+        else:
+            # Try common gem bin directories (for Docker/Ruby gem installations)
+            import os
+            common_gem_paths = [
+                "/usr/local/bundle/bin/anystyle",
+                "/var/lib/gems/3.1.0/bin/anystyle",
+                "/var/lib/gems/3.0.0/bin/anystyle",
+                "/root/.local/share/gem/ruby/3.1.0/bin/anystyle",
+                "/root/.local/share/gem/ruby/3.0.0/bin/anystyle",
+            ]
+            # Also check via gem environment
+            try:
+                import subprocess
+                gem_env = subprocess.run(
+                    ["gem", "env", "gemdir"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                if gem_env.returncode == 0:
+                    gem_dir = gem_env.stdout.strip()
+                    common_gem_paths.insert(0, os.path.join(gem_dir, "bin", "anystyle"))
+            except Exception:
+                pass  # Fall back to hardcoded paths
+            
+            anystyle_cmd = None
+            for path in common_gem_paths:
+                if os.path.exists(path) and os.access(path, os.X_OK):
+                    anystyle_cmd = path
+                    break
+            
+            if not anystyle_cmd:
+                # Fallback to just "anystyle" (will fail if not on PATH)
+                anystyle_cmd = "anystyle"
+    
     if not _check_cli(anystyle_cmd):
         return render_template(
             "index.html",

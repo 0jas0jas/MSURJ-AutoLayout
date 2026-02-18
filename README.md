@@ -80,7 +80,7 @@ which anystyle
    gem install anystyle-cli
    ```
 
-**Deploying to Render (free tier)**
+**Deploying to Render**
 
 The app can be run on [Render](https://render.com) as a Docker web service.
 

@@ -12,7 +12,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install anystyle-cli (citation parsing)
+# Add gem bin directories to PATH so anystyle is accessible
 RUN gem install anystyle-cli
+# System Ruby on Debian installs gems to /var/lib/gems/<version>/bin
+# Also check user gem directory and common locations
+ENV PATH="/usr/local/bundle/bin:/var/lib/gems/3.1.0/bin:/var/lib/gems/3.0.0/bin:/root/.local/share/gem/ruby/3.1.0/bin:/root/.local/share/gem/ruby/3.0.0/bin:${PATH}"
 
 # App lives in /app; run from project root so `processing` and `webapp` resolve
 WORKDIR /app
