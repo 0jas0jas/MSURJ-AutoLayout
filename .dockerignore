@@ -1,0 +1,24 @@
+# Dependencies and local dev
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Git and IDE
+.git/
+.gitignore
+.cursor/
+*.md
+!README.md
+
+# Data and generated output (keep output/template_dir via repo)
+data/
+# Ignore other output but allow output/template_dir to be in build context
+# (Render build gets repo; template_dir must be committed)
+output/218/
+output/224/
+
+# Misc
+.DS_Store
+*.ipynb

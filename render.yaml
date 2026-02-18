@@ -1,0 +1,11 @@
+# Render Blueprint – one Web Service from the Dockerfile
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: msurj-autolayout
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # PORT is set automatically by Render for web services
+    # Free tier: spins down after ~15 min idle; cold start on next visit
+    plan: free

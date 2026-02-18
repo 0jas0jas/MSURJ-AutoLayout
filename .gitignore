@@ -1,5 +1,8 @@
 data/
-output/
+# Ignore generated output but keep template_dir for deployment (Render Docker)
+output/*
+!output/template_dir/
+!output/template_dir/**
 .venv/
 __pycache__/
 *.pyc

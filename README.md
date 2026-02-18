@@ -79,3 +79,18 @@ which anystyle
    ```bash
    gem install anystyle-cli
    ```
+
+**Deploying to Render (free tier)**
+
+The app can be run on [Render](https://render.com) as a Docker web service.
+
+1. Ensure the LaTeX template is in the repo so the image can use it:
+   ```bash
+   git add output/template_dir/
+   git commit -m "Include template_dir for deployment"
+   ```
+2. Push the repo to GitHub and connect the repo to Render.
+3. In Render, create a **Web Service**, set the root to the repo, and use the **Docker** runtime. Render will use the repo’s `Dockerfile` and `render.yaml` if present.
+4. After deploy, the service URL will serve the app. The free tier spins down after ~15 minutes of no traffic; the first request after that may be slow (cold start).
+
+See `Dockerfile` and `render.yaml` in the repo for the exact build and run setup.
